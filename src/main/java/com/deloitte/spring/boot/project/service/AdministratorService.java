@@ -70,30 +70,10 @@ public class AdministratorService {
 //Add Election
 	public boolean addElection(Election election)
 			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//
-//		boolean result = false;
-//
-//		if (election.getElectionDate() != null && election.getElectionName() != null) {
-//
-//			if (electionRepository.findByElectionName(election.getElectionName()) == null) {
-//
-//				election = electionRepository.save(election);
-//				result = true;
-//				if (election.getElectionId() != 0) {
-//					Logger.info("Election is added");
-//					return result;
-//				}
-//				Logger.error("Not able to add Election record");
-//				throw new NoSuchElectionException("Not able to add Election record");
-//			}
-//			Logger.error("Election Name Already Exists");
-//			throw new ElectionAlreadyExistsException("Election Name Already Exists");
-//		}
-//		Logger.error("Field is Empty");
-//		throw new InvalidFieldException("Field is Empty");
-		 if(electionRepository.getById(election.getElectionId())!=null) {
-	            return false;
-	        }
+
+//		 if(electionRepository.getById(election.getElectionId())!=null) {
+//	            return false;
+//	        }
 	        electionRepository.save(election);
 	        return true;
 		
@@ -143,29 +123,10 @@ public class AdministratorService {
 //Add Party
 	public boolean addParty(Party party)
 			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//		boolean result = false;
 //
-//		if (party.getPartyName() != null && party.getLeader() != null) {
-//
-//			if (partyRepository.findByPartyName(party.getPartyName()) == null) {
-//
-//				party = partyRepository.save(party);
-//				result = true;
-//				if (party.getRegId() != null) {
-//					Logger.info("Party is added");
-//					return result;
-//				}
-//				Logger.error("Not able to add Party record");
-//				throw new NoSuchElectionException("Not able to add Party record");
-//			}
-//			Logger.error("Party Name Already Exists");
-//			throw new ElectionAlreadyExistsException("Party Name Already Exists");
-//		}
-//		Logger.error("Field is Empty");
-//		throw new InvalidFieldException("Field is Empty");
-		if(partyRepository.getById(party.getRegId())!=null) {
-            return false;
-        }
+//		if(partyRepository.getById(party.getRegId())!=null) {
+//            return false;
+//        }
         partyRepository.save(party);
         return true;
 	}
@@ -214,30 +175,9 @@ public class AdministratorService {
 //Add Candidate
 	public boolean addCandidate(Candidates candidate)
 			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//		boolean result = false;
-//
-//		if (candidate.getCandidateName() != null && candidate.getConstituencyId() != 0
-//				&& candidate.getPartyRegId() != null) {
-//
-//			if (candidateRepository.findCandidateByName(candidate.getCandidateName().toLowerCase()) == null) {
-//
-//				candidate = candidateRepository.save(candidate);
-//				result = true;
-//				if (candidate.getCandidateId() != 0) {
-//					Logger.info("candidate is added");
-//					return result;
-//				}
-//				Logger.error("Not able to add candidate record");
-//				throw new NoSuchElectionException("Not able to add candidate record");
-//			}
-//			Logger.error("candidate Name Already Exists");
-//			throw new ElectionAlreadyExistsException("candidate Name Already Exists");
-//		}
-//		Logger.error("Field is Empty");
-//		throw new InvalidFieldException("Field is Empty");
-		if(candidateRepository.getById(candidate.getCandidateId())!=null) {
-            return false;
-        }
+//		if(candidateRepository.getById(candidate.getCandidateId())!=null) {
+//            return false;
+//        }
         candidateRepository.save(candidate);
         return true;
 	}
@@ -286,31 +226,10 @@ public class AdministratorService {
 // Add Constituency
 	public boolean addConstituency(Constituency constituency)
 			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//		boolean result = false;
-//
-//		if (constituency.getConstituencyName() != null && constituency.getElectionId() != 0
-//				&& constituency.getState() != null) {
-//
-//			if (constituencyRepository
-//					.findConstituencyByName(constituency.getConstituencyName().toLowerCase()) == null) {
-//
-//				constituency = constituencyRepository.save(constituency);
-//				result = true;
-//				if (constituency.getConstituencyId() != 0) {
-//					Logger.info("constituency is added");
-//					return result;
-//				}
-//				Logger.error("Not able to add constituency record");
-//				throw new NoSuchElectionException("Not able to add constituency record");
-//			}
-//			Logger.error("constituency Name Already Exists");
-//			throw new ElectionAlreadyExistsException("constituency Name Already Exists");
-//		}
-//		Logger.error("Field is Empty");
-//		throw new InvalidFieldException("Field is Empty");
-		if(constituencyRepository.getById(constituency.getConstituencyId())!=null) {
-            return false;
-        }
+
+//		if(constituencyRepository.getById(constituency.getConstituencyId())!=null) {
+//            return false;
+//        }
         constituencyRepository.save(constituency);
         return true;
 		
