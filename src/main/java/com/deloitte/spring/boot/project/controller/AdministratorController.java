@@ -19,8 +19,11 @@ import com.deloitte.spring.boot.project.model.Administrator;
 import com.deloitte.spring.boot.project.model.Candidates;
 import com.deloitte.spring.boot.project.model.Constituency;
 import com.deloitte.spring.boot.project.model.Election;
+import com.deloitte.spring.boot.project.model.ElectoralOfficer;
 import com.deloitte.spring.boot.project.model.Party;
+import com.deloitte.spring.boot.project.model.Voter;
 import com.deloitte.spring.boot.project.service.AdministratorService;
+import com.deloitte.spring.boot.project.service.ElectoralOfficerService;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -28,6 +31,9 @@ public class AdministratorController {
 
 	@Autowired
 	private AdministratorService adminService;
+	
+	@Autowired
+	private ElectoralOfficerService eoService;
 
 	@RequestMapping(path = "/add-admin", method = RequestMethod.POST)
 	public ResponseEntity<String> addAdmin(@RequestBody Administrator admin) throws InvalidFieldException {
@@ -54,7 +60,7 @@ public class AdministratorController {
 		return list;
 	}
 
-	@RequestMapping(path = "/get-election-by-name/{electionName}", method = RequestMethod.GET)
+	@RequestMapping(path = "/get-election-by-name/{electionName}",method=RequestMethod.GET)
 	public ResponseEntity<List<Election>> getElectionsByName(@PathVariable(name = "electionName") String electionName) {
 
 		return new ResponseEntity<List<Election>>(adminService.getElectionByName(electionName),HttpStatus.OK);
@@ -68,7 +74,7 @@ public class AdministratorController {
 		return response;
 	}
 
-	@RequestMapping(path = "/delete-election-by-id/{electionId}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/delete-election-by-id/{electionId}",method=RequestMethod.DELETE)
 	public ResponseEntity<String> deleteElection(@PathVariable("electionId") int electionId)
 			throws NoSuchRecordException {
 		ResponseEntity<String> response = null;
@@ -93,7 +99,7 @@ public class AdministratorController {
 		return list;
 	}
 
-	@RequestMapping(path = "/get-party-by-name/{partyName}", method = RequestMethod.GET)
+	@RequestMapping(path = "/get-party-by-name/{partyName}",method=RequestMethod.GET)
 	public ResponseEntity<List<Party>> getPartiesByName(@PathVariable(name = "partyName") String partyName) {
 
 		return new ResponseEntity<List<Party>>(adminService.getPartiesByName(partyName),HttpStatus.OK);
@@ -107,7 +113,7 @@ public class AdministratorController {
 		return response;
 	}
 
-	@RequestMapping(path = "/delete-party-by-id/{partyId}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/delete-party-by-id/{partyId}",method=RequestMethod.DELETE)
 	public ResponseEntity<String> deleteParty(@PathVariable("partyId") String regId)
 			throws NoSuchRecordException {
 		ResponseEntity<String> response = null;
@@ -118,12 +124,8 @@ public class AdministratorController {
 	}
 	
 	@RequestMapping(path = "/add-candidate", method = RequestMethod.POST)
-	public ResponseEntity<String> addCandidate(@RequestBody Candidates candidate) throws InvalidFieldException {
-		ResponseEntity<String> response = null;
-		if (adminService.addCandidate(candidate)) {
-			response = new ResponseEntity<String>(candidate.toString(), HttpStatus.CREATED);
-		}
-		return response;
+	public ResponseEntity<Candidates> addCandidate(@RequestBody Candidates candidate) throws InvalidFieldException {
+		return new ResponseEntity<Candidates>(adminService.addCandidate(candidate),HttpStatus.OK);
 	}
 
 	@RequestMapping(path = "/get-all-candidates", method = RequestMethod.GET)
@@ -132,7 +134,7 @@ public class AdministratorController {
 		return list;
 	}
 
-	@RequestMapping(path = "/get-candidate-by-name/{candidateName}",method = RequestMethod.GET)
+	@RequestMapping(path = "/get-candidate-by-name/{candidateName}",method=RequestMethod.GET)
 	public ResponseEntity<List<Candidates>> getCandidatesByName(@PathVariable(name = "candidateName") String candidateName) {
 
 		return new ResponseEntity<List<Candidates>>(adminService.getCandidateByName(candidateName),HttpStatus.OK);
@@ -146,7 +148,7 @@ public class AdministratorController {
 		return response;
 	}
 
-	@RequestMapping(path = "/delete-candidate-by-id/{candidateId}",method = RequestMethod.DELETE)
+	@RequestMapping(path = "/delete-candidate-by-id/{candidateId}",method=RequestMethod.DELETE)
 	public ResponseEntity<String> deleteCandidate(@PathVariable("candidateId") int partyRegId)
 			throws NoSuchRecordException {
 		ResponseEntity<String> response = null;
@@ -171,7 +173,7 @@ public class AdministratorController {
 		return list;
 	}
 
-	@RequestMapping(path = "/get-constituency-by-name/{constituencyName}",method = RequestMethod.GET)
+	@RequestMapping(path = "/get-constituency-by-name/{constituencyName}",method=RequestMethod.GET)
 	public ResponseEntity<List<Constituency>> getConstituencyByName(@PathVariable(name = "constituencyName") String constituencyName) {
 
 		return new ResponseEntity<List<Constituency>>(adminService.getConstituencyByName(constituencyName),HttpStatus.OK);
@@ -185,12 +187,51 @@ public class AdministratorController {
 		return response;
 	}
 
-	@RequestMapping(path = "/delete-constituency-by-id/{constituencyId}",method = RequestMethod.DELETE)
+	@RequestMapping(path = "/delete-constituency-by-id/{constituencyId}",method=RequestMethod.DELETE)
 	public ResponseEntity<String> deleteConstituency(@PathVariable("constituencyId") int constituencyId)
 			throws NoSuchRecordException {
 		ResponseEntity<String> response = null;
 		if (adminService.deleteConstituency(constituencyId)) {
 			response = new ResponseEntity<String>("Candidate Deleted", HttpStatus.OK);
+		}
+		return response;
+	}
+	
+	@RequestMapping(path = "/add-eo",method=RequestMethod.POST)
+	public ResponseEntity<String> addEO(@RequestBody ElectoralOfficer eo) throws NoSuchRecordException {
+		ResponseEntity<String> response = null;
+		if (eoService.addEO(eo)) {
+			response = new ResponseEntity<String>(eo.toString(), HttpStatus.CREATED);
+		}
+		return response;
+	}
+
+	@RequestMapping(path = "/get-all-officers", method = RequestMethod.GET)
+	public List<ElectoralOfficer> getAllOfficers() throws NoSuchRecordException {
+		List<ElectoralOfficer> list = adminService.getAllOfficers();
+		return list;
+	}
+
+	@RequestMapping(path = "/get-officer-by-name/{officerName}",method=RequestMethod.GET)
+	public ResponseEntity<List<ElectoralOfficer>> getofficerByName(@PathVariable(name = "officerName") String electoralOfficerName) {
+
+		return new ResponseEntity<List<ElectoralOfficer>>(adminService.getOfficerByName(electoralOfficerName),HttpStatus.OK);
+	}
+	
+
+	@RequestMapping(path = "/update-officer", method = RequestMethod.PUT)
+	public ResponseEntity<ElectoralOfficer> updateOfficer(@Valid @RequestBody ElectoralOfficer electoralofficer) throws NoSuchRecordException {
+		ResponseEntity<ElectoralOfficer> response = new ResponseEntity<>(electoralofficer, HttpStatus.CREATED);
+		adminService.updateOfficer(electoralofficer);
+		return response;
+	}
+
+	@RequestMapping(path = "/delete-officer-by-id/{officerId}",method=RequestMethod.DELETE)
+	public ResponseEntity<String> deleteOfficer(@PathVariable("officerId") String electoralOfficerId)
+			throws NoSuchRecordException {
+		ResponseEntity<String> response = null;
+		if (adminService.deleteOfficer(electoralOfficerId)) {
+			response = new ResponseEntity<String>("Officer Deleted", HttpStatus.OK);
 		}
 		return response;
 	}

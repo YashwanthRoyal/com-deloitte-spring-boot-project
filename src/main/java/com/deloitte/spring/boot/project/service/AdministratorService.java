@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.deloitte.spring.boot.project.exception.ElectionAlreadyExistsException;
 import com.deloitte.spring.boot.project.exception.InvalidFieldException;
 import com.deloitte.spring.boot.project.exception.NoSuchCandidateRecordException;
 import com.deloitte.spring.boot.project.exception.NoSuchConstituencyException;
@@ -20,11 +19,13 @@ import com.deloitte.spring.boot.project.model.Administrator;
 import com.deloitte.spring.boot.project.model.Candidates;
 import com.deloitte.spring.boot.project.model.Constituency;
 import com.deloitte.spring.boot.project.model.Election;
+import com.deloitte.spring.boot.project.model.ElectoralOfficer;
 import com.deloitte.spring.boot.project.model.Party;
 import com.deloitte.spring.boot.project.repository.AdministratorRepository;
 import com.deloitte.spring.boot.project.repository.CandidateRepository;
 import com.deloitte.spring.boot.project.repository.ConstituencyRepository;
 import com.deloitte.spring.boot.project.repository.ElectionRepository;
+import com.deloitte.spring.boot.project.repository.ElectoralOfficerRepository;
 import com.deloitte.spring.boot.project.repository.PartyRepository;
 
 @Service
@@ -44,6 +45,9 @@ public class AdministratorService {
 
 	@Autowired
 	private ConstituencyRepository constituencyRepository;
+	
+	@Autowired
+	private ElectoralOfficerRepository electoralOfficerRepository;
 
 	private final Logger Logger = LoggerFactory.getLogger(this.getClass());
 
@@ -68,12 +72,10 @@ public class AdministratorService {
 	}
 
 //Add Election
-	public boolean addElection(Election election)
-			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-
-//		 if(electionRepository.getById(election.getElectionId())!=null) {
-//	            return false;
-//	        }
+	public boolean addElection(Election election){
+		 if(electionRepository.existsById(election.getElectionId())) {
+	            return false;
+	        }
 	        electionRepository.save(election);
 	        return true;
 		
@@ -121,12 +123,10 @@ public class AdministratorService {
 	}
 
 //Add Party
-	public boolean addParty(Party party)
-			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//
-//		if(partyRepository.getById(party.getRegId())!=null) {
-//            return false;
-//        }
+	public boolean addParty(Party party){
+		if(partyRepository.existsById(party.getRegId())) {
+            return false;
+        }
         partyRepository.save(party);
         return true;
 	}
@@ -173,13 +173,11 @@ public class AdministratorService {
 	}
 
 //Add Candidate
-	public boolean addCandidate(Candidates candidate)
-			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-//		if(candidateRepository.getById(candidate.getCandidateId())!=null) {
-//            return false;
-//        }
-        candidateRepository.save(candidate);
-        return true;
+	public Candidates addCandidate(Candidates candidate){
+		if(candidateRepository.existsById(candidate.getCandidateId())) {
+            return null;
+        }
+        return candidateRepository.save(candidate);
 	}
 
 // Get All Candidates
@@ -224,12 +222,10 @@ public class AdministratorService {
 	}
 
 // Add Constituency
-	public boolean addConstituency(Constituency constituency)
-			throws InvalidFieldException, NoSuchElectionException, ElectionAlreadyExistsException {
-
-//		if(constituencyRepository.getById(constituency.getConstituencyId())!=null) {
-//            return false;
-//        }
+	public boolean addConstituency(Constituency constituency){
+		if(constituencyRepository.existsById(constituency.getConstituencyId())) {
+            return false;
+        }
         constituencyRepository.save(constituency);
         return true;
 		
@@ -274,6 +270,46 @@ public class AdministratorService {
 		}
 		Logger.error("Given id does not exist to delete constituency");
 		throw new NoSuchConstituencyException("Given id does not exist to delete constituency");
+	}
+
+//Get All Officers
+	public List<ElectoralOfficer> getAllOfficers() throws NoSuchRecordException {
+		List<ElectoralOfficer> list = electoralOfficerRepository.findAll();
+		if (!list.isEmpty()) {
+			Logger.info("findAllOfficers");
+			return list;
+		}
+		Logger.error("No List found");
+		throw new NoSuchRecordException("No List found");
+	}
+
+//Get Officer By Name
+	public List<ElectoralOfficer> getOfficerByName(String electoralOfficerName) {
+		List<ElectoralOfficer> List = electoralOfficerRepository.findByElectoralOfficerName(electoralOfficerName);
+		if (!List.isEmpty()) {
+			return List;
+		} else {
+			String errorMessage = "Officer with name " + electoralOfficerName + " not found.";
+			throw new NoSuchConstituencyException(errorMessage);
+		}	}
+
+//Update Officer
+	public @Valid ElectoralOfficer updateOfficer(@Valid ElectoralOfficer electoralofficer) {
+		if (electoralOfficerRepository.existsById(electoralofficer.getElectoralOfficerId()))
+			return electoralOfficerRepository.save(electoralofficer);
+		Logger.error("No List found");
+		throw new NoSuchRecordException("No List found");		
+	}
+
+//Delete Officer
+	public boolean deleteOfficer(String electoralOfficerId) throws NoSuchConstituencyException {
+		if (electoralOfficerRepository.existsById(electoralOfficerId)) {
+			electoralOfficerRepository.deleteById(electoralOfficerId);
+			Logger.info("deleteOfficer");
+			return true;
+		}
+		Logger.error("Given id does not exist to delete officer");
+		throw new NoSuchConstituencyException("Given id does not exist to delete officer");
 	}
 
 }

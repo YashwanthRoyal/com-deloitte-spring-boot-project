@@ -23,7 +23,7 @@ public class Vote {
 	private int voteId;
 
 	@JoinColumn(name = "candidate_id", nullable = false)
-	private int candidate;
+	private int candidateId;
 
 	@JoinColumn(name = "epic", nullable = false)
 	private String epic;
@@ -35,16 +35,16 @@ public class Vote {
 
 	}
 	
-	public Vote(int candidate, String epic) {
+	public Vote(int candidateId, String epic) {
 		super();
-		this.candidate = candidate;
+		this.candidateId = candidateId;
 		this.epic = epic;
 	}
 	
-	public Vote(int voteId, int candidate, String epic) {
+	public Vote(int voteId, int candidateId, String epic) {
 		super();
 		this.voteId = voteId;
-		this.candidate = candidate;
+		this.candidateId = candidateId;
 		this.epic = epic;
 	}
 
@@ -56,12 +56,12 @@ public class Vote {
 		this.voteId = voteId;
 	}
 
-	public int getCandidate() {
-		return candidate;
+	public int getCandidateId() {
+		return candidateId;
 	}
 
-	public void setCandidate(int candidate) {
-		this.candidate = candidate;
+	public void setCandidateId(int candidateId) {
+		this.candidateId = candidateId;
 	}
 
 	public String getEpic() {
@@ -74,7 +74,7 @@ public class Vote {
 
 	@Override
 	public String toString() {
-		return "Vote [voteId=" + voteId + ", candidate=" + candidate + ", epic=" + epic + "]";
+		return "Vote [voteId=" + voteId + ", candidateId=" + candidateId + ", epic=" + epic + "]";
 	}
 
 }

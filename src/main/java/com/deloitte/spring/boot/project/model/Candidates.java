@@ -16,8 +16,8 @@ public class Candidates{
 
 	@Id
 	@Column(name = "candidate_id")
-//	@GenericGenerator(name = "candidates_seq", strategy = "increment")
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidates_seq")	
+	@GenericGenerator(name = "candidates_seq", strategy = "increment")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "candidates_seq")	
 	private int candidateId;
 
 	@Column(name = "candidate_name", length = 40, nullable = false)
